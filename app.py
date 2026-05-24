@@ -8,13 +8,10 @@ app = Flask(__name__)
 # ---------- Helper functions ----------
 
 def load_words():
-    with open("word.json","r") as file:
-        #generate a random number
-        x = random.randint(0,len(file))
+    with open("words.json", "r") as file:
+        words = json.load(file)
 
-        #load only the specific set from the words list
-        word_set = json.load(file[x])
-        return word_set
+    return words #returns the whole into the route
 
 
 def choose_main_word():
@@ -29,14 +26,14 @@ def choose_imposter_word(word_set, difficulty="random"):
         imposter_list.append(word_set["easy"])
     elif difficulty == "medium":
         imposter_list.append(word_set["medium"])
-    elif difficulty == "medium":
+    elif difficulty == "hard":
         imposter_list.append(word_set["hard"])
 
     #if difficulty is "random" or the list is empty
-    if len(imposter_list)<2:
-        imposter_list.append(word_set["easy"])
-        imposter_list.append(word_set["medium"])
-        imposter_list.append(word_set["hard"])
+    if (difficulty=="random") or (not imposter_list):
+        imposter_list.extend(word_set["easy"])
+        imposter_list.extend(word_set["medium"])
+        imposter_list.extend(word_set["hard"])
 
     #choose a random word from the list
     imposter_word = random.choice(imposter_list)
@@ -44,7 +41,7 @@ def choose_imposter_word(word_set, difficulty="random"):
 
 
 def choose_imposters(players, imposters):
-    imposter_ids = random.sample(range(0,players+1), imposters)
+    imposter_ids = random.sample(range(1,players+1), imposters)
     
     return imposter_ids
 
@@ -55,15 +52,35 @@ def build_players():
 
 # ------------ Routes -------------
 
-@app.route("/start-game", methods=["POST","GET"])
+@app.route("/start-game", methods=["POST"])
 def start_game():
 
+    #---------extract the frontend request data
+    data = request.get_json()
+
+    #---- WHILE DEBUGGING ONLY-- (FALL BACK)
+    if data is None:
+        data = {
+            "player_count": 5,
+            "imposter_count": 1,
+            "mode": "related",
+            "difficulty": "random",
+            "starting_player": 2
+        }
+    else:
+        player_count = data["player_count"]
+        imposter_count = data["imposter_count"]
+        mode = data["mode"]
+        difficulty = data["difficulty"]
+        starting_player = data["starting_player"]
+
+
     #----------get the current words set
-    words_data = request.get_json(load_words())
-    print(words_data)
+    words = load_words()
+    word_set = random.choice(words)
 
     #-----------choose main word
-    main_word = words_data["main"]
+    main_word = word_set["main"]
 
     #choose imposter word
     #if mode is "chaos", we need to choose one
@@ -72,9 +89,9 @@ def start_game():
 
 
     if mode == "related":
-        imposter_word = choose_imposter_word(words_data,difficulty)
+        imposter_word = choose_imposter_word(word_set,difficulty)
     else:
-        imposter_word == "Imposter"
+        imposter_word = "Imposter"
 
 
     #--------- choose the imposter
