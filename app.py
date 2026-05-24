@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import json
 import random
 
@@ -14,8 +14,8 @@ def load_words():
     return words #returns the whole into the route
 
 
-def choose_main_word():
-    pass
+def choose_main_word(words):
+    return random.choice(words)
 
 
 def choose_imposter_word(word_set, difficulty="random"):
@@ -23,11 +23,11 @@ def choose_imposter_word(word_set, difficulty="random"):
 
     #choose the imposter list according to difficulty
     if difficulty == "easy":
-        imposter_list.append(word_set["easy"])
+        imposter_list.extend(word_set["easy"])
     elif difficulty == "medium":
-        imposter_list.append(word_set["medium"])
+        imposter_list.extend(word_set["medium"])
     elif difficulty == "hard":
-        imposter_list.append(word_set["hard"])
+        imposter_list.extend(word_set["hard"])
 
     #if difficulty is "random" or the list is empty
     if (difficulty=="random") or (not imposter_list):
@@ -52,6 +52,14 @@ def build_players():
 
 # ------------ Routes -------------
 
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+
+
+
 @app.route("/start-game", methods=["POST"])
 def start_game():
 
@@ -67,20 +75,19 @@ def start_game():
             "difficulty": "random",
             "starting_player": 2
         }
-    else:
-        player_count = data["player_count"]
-        imposter_count = data["imposter_count"]
-        mode = data["mode"]
-        difficulty = data["difficulty"]
-        starting_player = data["starting_player"]
+
+    player_count = data["player_count"]
+    imposter_count = data["imposter_count"]
+    mode = data["mode"]
+    difficulty = data["difficulty"]
+    starting_player = data["starting_player"]
 
 
     #----------get the current words set
     words = load_words()
-    word_set = random.choice(words)
-
-    #-----------choose main word
+    word_set = choose_main_word(words)
     main_word = word_set["main"]
+    
 
     #choose imposter word
     #if mode is "chaos", we need to choose one
@@ -99,11 +106,10 @@ def start_game():
 
 
     return jsonify({
-        "player_count": 5,
-        "imposter_count": 1,
-        "mode": "related",
-        "difficulty": "random",
-        "starting_player": 2
+        "mode": mode,
+        "main_word": main_word,
+        "imposter_word": imposter_word,
+        "imposter_ids": imposter_ids
     })
 
 

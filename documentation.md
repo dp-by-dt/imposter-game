@@ -87,3 +87,10 @@
     choose_imposters()
     build_players()
 - The functions `load_words()`, `choose_imposter_word()`, `choose_imposters()` etc are defined in the primitive stage (still need correction and polishing... DOES NOT work now.. just the idea laid out)
+
+
+
+# 3.0 Front end for testing backend 
+
+- html and js files created for testing
+- The backend has a dummy settings for now (aobut the mode, difficulty etc) and fetches the random word set and formats and provide back to the entry point (`home/`)
