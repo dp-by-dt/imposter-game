@@ -78,11 +78,12 @@
 - Initial strucutre of `app.py` is written as the skeleton
 
 
-Dummy JSON dataset
-Generate game payload
-Frontend fetch
-Player iteration
-Reveal/hide flow
-Final reveal screen
-localStorage settings
-polish
+# 2.1 Helper functions
+
+- Helper functions names are defined:
+    load_words()
+    choose_main_word()
+    choose_imposter_word()
+    choose_imposters()
+    build_players()
+- The functions `load_words()`, `choose_imposter_word()`, `choose_imposters()` etc are defined in the primitive stage (still need correction and polishing... DOES NOT work now.. just the idea laid out)
