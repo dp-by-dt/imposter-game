@@ -94,3 +94,8 @@
 
 - html and js files created for testing
 - The backend has a dummy settings for now (aobut the mode, difficulty etc) and fetches the random word set and formats and provide back to the entry point (`home/`)
+
+
+# 4.0 Front end desing
+
+- Designed a retro pixalated app style

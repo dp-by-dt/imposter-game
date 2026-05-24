@@ -1,23 +1,221 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Imposter Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>IMPOSTER</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-    <div id="game-container">
+    <!-- Pixel noise overlay -->
+    <div class="noise-overlay"></div>
 
-        <h1 id="title">Imposter Game</h1>
+    <!-- Scanlines -->
+    <div class="scanlines"></div>
 
-        <button id="start-btn">
-            Start Game
-        </button>
+    <!-- Theme toggle -->
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+        <span class="theme-icon">☀</span>
+    </button>
+
+    <!-- Main app container -->
+    <div id="app">
+
+        <!-- SCREEN: SETUP -->
+        <div id="screen-setup" class="screen active">
+
+            <div class="screen-inner">
+
+                <div class="logo-block">
+                    <div class="logo-tag">ARCADE</div>
+                    <h1 class="logo-title">IMPOSTER</h1>
+                    <div class="logo-subtitle">WORD GAME</div>
+                    <div class="logo-stars">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                    </div>
+                </div>
+
+                <div class="card setup-card">
+
+                    <!-- Player count — front and center -->
+                    <div class="players-control">
+                        <div class="control-label">PLAYERS</div>
+                        <div class="stepper">
+                            <button class="stepper-btn" id="players-minus" aria-label="Decrease players">−</button>
+                            <span class="stepper-value" id="players-display">4</span>
+                            <button class="stepper-btn" id="players-plus" aria-label="Increase players">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Settings toggle -->
+                    <button class="settings-toggle" id="settings-toggle">
+                        <span class="settings-icon">⚙</span>
+                        <span class="settings-label">SETTINGS</span>
+                        <span class="settings-arrow" id="settings-arrow">▼</span>
+                    </button>
+
+                    <!-- Collapsible settings panel -->
+                    <div class="settings-panel" id="settings-panel">
+
+                        <div class="setting-row">
+                            <div class="setting-name">IMPOSTERS</div>
+                            <div class="stepper stepper-sm">
+                                <button class="stepper-btn" id="imposters-minus" aria-label="Decrease imposters">−</button>
+                                <span class="stepper-value" id="imposters-display">1</span>
+                                <button class="stepper-btn" id="imposters-plus" aria-label="Increase imposters">+</button>
+                            </div>
+                        </div>
+
+                        <div class="setting-row">
+                            <div class="setting-name">STARTING PLAYER</div>
+                            <div class="stepper stepper-sm">
+                                <button class="stepper-btn" id="starting-minus" aria-label="Decrease starting player">−</button>
+                                <span class="stepper-value" id="starting-display">1</span>
+                                <button class="stepper-btn" id="starting-plus" aria-label="Increase starting player">+</button>
+                            </div>
+                        </div>
+
+                        <div class="setting-row">
+                            <div class="setting-name">MODE</div>
+                            <div class="pill-group" id="mode-group">
+                                <button class="pill active" data-value="related">RELATED</button>
+                                <button class="pill" data-value="classic">CLASSIC</button>
+                                <button class="pill" data-value="chaos">CHAOS</button>
+                            </div>
+                        </div>
+
+                        <div class="setting-row" id="difficulty-row">
+                            <div class="setting-name">DIFFICULTY</div>
+                            <div class="pill-group" id="difficulty-group">
+                                <button class="pill active" data-value="random">RNG</button>
+                                <button class="pill" data-value="easy">EASY</button>
+                                <button class="pill" data-value="medium">MED</button>
+                                <button class="pill" data-value="hard">HARD</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <button class="btn-primary" id="start-btn">
+                        <span class="btn-text">INSERT COIN</span>
+                        <span class="btn-icon">▶</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SCREEN: PASS DEVICE -->
+        <div id="screen-pass" class="screen">
+            <div class="screen-inner">
+                <div class="card pass-card">
+                    <div class="player-badge" id="pass-player-badge">P1</div>
+                    <div class="pass-heading">YOUR TURN</div>
+                    <p class="pass-subtext">Check no one else is looking, then tap to reveal your word.</p>
+                    <button class="btn-primary btn-reveal" id="reveal-btn">
+                        <span class="btn-text">REVEAL WORD</span>
+                    </button>
+                    <div class="round-indicator" id="round-indicator">1 / 4</div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- SCREEN: WORD -->
+        <div id="screen-word" class="screen">
+            <div class="screen-inner">
+                <div class="card word-card">
+                    <div class="player-badge" id="word-player-badge">P1</div>
+                    <div class="word-label">YOUR WORD IS</div>
+                    <div class="word-display" id="word-display">???</div>
+                    <button class="btn-primary btn-hide" id="hide-btn">
+                        <span class="btn-text">HIDE & PASS</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- SCREEN: DISCUSS -->
+        <div id="screen-discuss" class="screen">
+            <div class="screen-inner">
+                <div class="card discuss-card">
+                    <div class="discuss-icon">🕵️</div>
+                    <h2 class="discuss-heading">DISCUSS!</h2>
+                    <p class="discuss-sub">Talk about your words.<br>Find the IMPOSTER.</p>
+                    <button class="btn-primary btn-danger" id="reveal-imposter-btn">
+                        <span class="btn-text">REVEAL IMPOSTER</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- SCREEN: REVEAL -->
+        <div id="screen-reveal" class="screen">
+            <div class="screen-inner">
+                <div class="card reveal-card">
+
+                    <div class="reveal-block">
+                        <div class="reveal-label">MAIN WORD</div>
+                        <div class="reveal-word" id="main-word-display">—</div>
+                    </div>
+
+                    <div class="divider-pixel"></div>
+
+                    <div class="reveal-block imposter-block">
+                        <div class="reveal-label">IMPOSTER WORD</div>
+                        <div class="reveal-word reveal-word-imposter" id="imposter-word-display">—</div>
+                    </div>
+
+                    <div class="divider-pixel"></div>
+
+                    <div class="reveal-block">
+                        <div class="reveal-label">IMPOSTER<span id="imposter-plural"></span></div>
+                        <div class="reveal-imposters" id="imposters-display">—</div>
+                    </div>
+
+                    <button class="btn-primary" id="play-again-btn">
+                        <span class="btn-text">PLAY AGAIN</span>
+                        <span class="btn-icon">↺</span>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- SCREEN: LOADING -->
+        <div id="screen-loading" class="screen">
+            <div class="screen-inner">
+                <div class="loading-block">
+                    <div class="pixel-spinner">
+                        <div class="spinner-row">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <div class="spinner-row">
+                            <span></span><span class="center"></span><span></span>
+                        </div>
+                        <div class="spinner-row">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                    <div class="loading-text">LOADING...</div>
+                </div>
+            </div>
+        </div>
 
     </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
-
 </body>
 </html>
