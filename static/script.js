@@ -156,7 +156,7 @@ function showPassScreen() {
     const player = gameData.players[currentPlayerIndex];
     const total  = gameData.players.length;
 
-    document.getElementById("pass-player-badge").textContent = `P${player.player}`;
+    document.getElementById("pass-player-badge").textContent = `Player-${player.player}`;
     document.getElementById("round-indicator").textContent   = `${currentPlayerIndex + 1} / ${total}`;
 
     showScreen("pass");
@@ -168,7 +168,7 @@ document.getElementById("reveal-btn").addEventListener("click", showWordScreen);
 function showWordScreen() {
     const player = gameData.players[currentPlayerIndex];
 
-    document.getElementById("word-player-badge").textContent = `P${player.player}`;
+    document.getElementById("word-player-badge").textContent = `Player-${player.player}`;
     document.getElementById("word-display").textContent      = player.word.toUpperCase();
 
     showScreen("word");
