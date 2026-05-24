@@ -99,3 +99,14 @@
 # 4.0 Front end desing
 
 - Designed a retro pixalated app style
+
+
+.reveal-imposters {
+    font-family: var(--font-pixel);
+    font-size: 14px;
+    color: var(--accent3);
+    text-shadow: 2px 2px 0 var(--gold-dim);
+    letter-spacing: 3px;
+    /* remove this line: */
+    animation: word-reveal 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+}

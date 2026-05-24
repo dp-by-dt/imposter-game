@@ -94,7 +94,7 @@ function bindStepper(minusId, plusId, displayId, key, min, max, getMaxFn) {
 }
 
 bindStepper("players-minus",  "players-plus",  "players-display",  "player_count",    2, 12);
-bindStepper("imposters-minus","imposters-plus", "imposters-display","imposter_count",  1, 6,
+bindStepper("imposters-minus","imposters-plus", "imposters-count-display","imposter_count",  1, 6,
     () => settings.player_count - 1);
 bindStepper("starting-minus", "starting-plus",  "starting-display", "starting_player", 1, 12,
     () => settings.player_count);
@@ -195,7 +195,7 @@ function showRevealScreen() {
     document.getElementById("imposter-word-display").textContent = gameData.imposter_word.toUpperCase();
     document.getElementById("imposter-plural").textContent       = plural;
     document.getElementById("imposters-display").textContent     =
-        imposterIds.map(id => `P${id}`).join("  ·  ");
+        imposterIds.map(id => `Player-${id}`).join("  ·  ");
 
     showScreen("reveal");
 }

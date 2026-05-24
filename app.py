@@ -46,11 +46,6 @@ def choose_imposter_word(word_set, difficulty="random"):
     return imposter_word
 
 
-def choose_imposters(players, imposters):
-    imposter_ids = random.sample(range(1,players+1), imposters)
-    
-    return imposter_ids
-
 
 def build_players(players_list, imposters_list, imposter_word, main_word):
     players_data = []
@@ -124,7 +119,7 @@ def start_game():
 
 
     #--------- choose the imposter
-    imposter_ids = choose_imposters(player_count,imposter_count)
+    imposter_ids = random.sample(players_list, imposter_count)
     #imposters_list = [players_list[k] for k in imposter_ids]
     imposters_list = imposter_ids
 
