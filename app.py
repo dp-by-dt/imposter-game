@@ -14,6 +14,12 @@ def load_words():
     return words #returns the whole into the route
 
 
+def make_players_list(player_count, starting_player):
+    players_list = [j for j in range(starting_player,player_count+1)]
+    players_list.extend(j for j in range(1, starting_player))
+    return players_list
+
+
 def choose_main_word(words):
     return random.choice(words)
 
@@ -46,8 +52,22 @@ def choose_imposters(players, imposters):
     return imposter_ids
 
 
-def build_players():
-    pass
+def build_players(players_list, imposters_list, imposter_word, main_word):
+    players_data = []
+
+    for player in players_list:
+        if player in imposters_list:
+            word = imposter_word
+        else:
+            word = main_word
+    
+        #populating players list
+        players_data.append({
+            "player": player,
+            "word": word
+        })
+
+    return players_data
 
 
 # ------------ Routes -------------
@@ -82,6 +102,8 @@ def start_game():
     difficulty = data["difficulty"]
     starting_player = data["starting_player"]
 
+    players_list = make_players_list(player_count,starting_player)
+
 
     #----------get the current words set
     words = load_words()
@@ -103,13 +125,20 @@ def start_game():
 
     #--------- choose the imposter
     imposter_ids = choose_imposters(player_count,imposter_count)
+    #imposters_list = [players_list[k] for k in imposter_ids]
+    imposters_list = imposter_ids
+
+
+    #create the final `player:word` list
+    players_and_words = build_players(players_list, imposters_list, imposter_word, main_word)
 
 
     return jsonify({
         "mode": mode,
         "main_word": main_word,
         "imposter_word": imposter_word,
-        "imposter_ids": imposter_ids
+        "imposter_ids": imposter_ids,
+        "players": players_and_words
     })
 
 

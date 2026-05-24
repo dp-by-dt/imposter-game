@@ -7,13 +7,15 @@
 </head>
 <body>
 
-    <h1>Imposter Game</h1>
+    <div id="game-container">
 
-    <button id="start-btn">
-        Start Game
-    </button>
+        <h1 id="title">Imposter Game</h1>
 
-    <pre id="output"></pre>
+        <button id="start-btn">
+            Start Game
+        </button>
+
+    </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 
